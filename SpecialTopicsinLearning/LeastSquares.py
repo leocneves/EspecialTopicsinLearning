@@ -1,7 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import SpecialTopicsinLearning.Matrix as mt
 
-class LeastSquares(object):
+class LeastSquares():
     def __init__(self):
         super(LeastSquares, self).__init__()
 
@@ -11,11 +12,17 @@ class LeastSquares(object):
         print("Code to implement Least Squares Algorithm")
         print('*'*50)
         print('\n')
-        print("\t - Enter X,Y (array) data and use fit(X,Y) function")
+        print("\t - Enter X,Y (array) for data, W for weight, bias and use fit(X,Y,W,bias) function")
         print("\t - Enter X (array) data and use predict(X) function\n")
 
-    def fit(self, X, Y, bias=0):
-        #Converting to vectors
+    def fit(self, X, Y, W=[], bias=0):
+
+        #Checking weight
+        if len(W) == 0:
+            W = np.ones([len(np.array(X).T),1])
+        else:
+            W = np.array(W).T
+
         if bias != 0:
             self.X = np.append(np.ones([len(np.array(X).T),1])*bias, np.array(X).T, axis=1)
         else:
@@ -24,59 +31,23 @@ class LeastSquares(object):
         self.Y = np.array(Y).T
         #transposing X ...
         self.Xt = (self.X).T
-        #doing Xt * X
-        linesT = (self.Xt).shape[0]
-        lines = (self.X).shape[0]
-        columns = (self.X).shape[1]
-        XtX = np.zeros([linesT,columns])
+        #doing Xt * W * X
+        XtX = (self.Xt).dot(W*self.X)
 
-        for i in range(linesT):
-           # iterate through columns of Y
-           for j in range(columns):
-               # iterate through rows of Y
-               for k in range(lines):
-                   XtX[i][j] += self.Xt[i][k] * self.X[k][j]
-        #doing Xt * y
-        linesT = (self.Xt).shape[0]
-        lines = (self.Y).shape[0]
-        columns = (self.Y).shape[1]
-        XtY = np.zeros([linesT,columns])
-        for i in range(linesT):
-           # iterate through columns of Y
-           for j in range(columns):
-               # iterate through rows of Y
-               for k in range(lines):
-                   XtY[i][j] += self.Xt[i][k] * self.Y[k][j]
-        #Inverting (Xt * X)
-        determinant = (XtX[0][0] * XtX[1][1]) - (XtX[0][1] * XtX[1][0])
-        invM = (1/determinant) * np.array([[XtX[1][1],-XtX[0][1]],[-XtX[1][0], XtX[0][0]]])
-        #print(invM)
+        #doing Xt * W * y
+        XtY = (self.Xt).dot(W*self.Y)
+
+        #Inverting (Xt * W * X)
+        invM = np.array(mt.getMatrixInverse(XtX.tolist()))
+
         #doing (XtX)-1 * XtY
-        linesT = (invM).shape[0]
-        lines = (XtY).shape[0]
-        columns = (XtY).shape[1]
-        beta = np.zeros([linesT,columns])
-        for i in range(linesT):
-           # iterate through columns of Y
-           for j in range(columns):
-               # iterate through rows of Y
-               for k in range(lines):
-                   beta[i][j] += invM[i][k] * XtY[k][j]
-        # print(beta)
-        self.beta = beta
+        self.beta = invM.dot(XtY)
 
     def predict(self, X):
         #Predicting values
         Xt = np.array(X)
         #doing Xt * beta
-        linesT = (Xt).shape[0]
-        lines = (self.beta).shape[0]
-        columns = (self.beta).shape[1]
-        y = np.zeros([linesT,columns])
-        for i in range(linesT):
-           for j in range(columns):
-               for k in range(lines):
-                   y[i][j] += Xt[i][k] * self.beta[k][j]
+        y = Xt.dot(self.beta)
         print(y)
         return y
 
@@ -93,6 +64,6 @@ class LeastSquares(object):
             y = list()
             for x in Xmod:
                 y.append(x[0]*self.beta[0][0] + x[1]*self.beta[1][0])
-            plt.plot(X[0],y)
+            # plt.plot(X[0],y)
 
             plt.show()
