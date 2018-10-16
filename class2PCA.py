@@ -18,15 +18,16 @@ def main():
     # Y_train = [df.GRADE.values]
 
     '''alpswater.xlsx'''
-    Y_train = df.BPt.values
-    X_train = df.Pressure.values
+    Y_1 = df.BPt.values
+    X_1 = df.Pressure.values
 
     '''USCensus.xls'''
-    # Y_train = df.Census.values
-    # X_train = [df.Year.values, [x**2 for x in df.Year.values]]
+    # Y_1 = df.Census.values
+    # X_1 = df.Year.values
+    # X_2 = [x**2 for x in df.Year.values]
 
 
-    pca.fit([Y_train, X_train])
+    pca.fit([Y_1, X_1],n_components=1)
 
     pca.plot()
 

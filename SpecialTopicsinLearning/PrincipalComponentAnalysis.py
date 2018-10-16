@@ -19,25 +19,31 @@ class PrincipalComponentAnalysis():
         # vectors = np.array([vectors])
         self.vectors = vectors
 
+        self.vect_med = [np.array([x]).mean() for x in vectors]
+
+        vectors = (np.array(vectors).T - self.vect_med).T
+
         #Covariance Matrix
         covarMatrix = np.ones([len(vectors),len(vectors)])
         for i in range(len(vectors)):
             for j in range(len(vectors)):
                 covarMatrix[i][j] = self.getCovariance(vectors[i], vectors[j])
 
-        # print(covarMatrix)
-        self.vect_med = [np.array([x]).mean() for x in vectors]
 
         #Computing the eigenvalues and right eigenvectors of a square array.
         self.W, self.v = np.linalg.eig(covarMatrix)
 
-        # e = self.vectors
+        feature_vector = self.v[:,0:n_components]
 
-        plt.scatter()
+        final_data = feature_vector.T.dot(np.array(vectors))
 
-        print(self.vect_med)
-        print(self.W)
-        print(self.v)
+        original_data = np.add(feature_vector.dot(final_data), np.array([self.vect_med]).T)
+
+        plt.scatter(original_data[0],original_data[1],color='red')
+        # print(self.vect_med)
+        # data = (np.add(original_data.T, )
+        #
+        # print(self.vectors)
 
 
     def plot(self):
