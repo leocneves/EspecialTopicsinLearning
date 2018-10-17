@@ -6,20 +6,21 @@ def main():
 
     '''Trocando o nome das bases e as variáveis de entrada, podemos gerar a resposta'''
 
-    file = 'alpswater.xlsx'
-    # file = 'Books_attend_grade.xls'
+    # file = 'alpswater.xlsx'
+    file = 'Books_attend_grade.xls'
     # file = 'USCensus.xls'
     df = pd.read_excel('database/' + file)
 
     '''Para cada base temos uma certa entrada, descomentar a usada anteriormente'''
 
     # '''Books_attend_grade.xls'''
-    # X_train = [df.BOOKS.values, df.ATTEND.values]
-    # Y_train = [df.GRADE.values]
+    X_1 = df.BOOKS.values
+    Y_1 = df.ATTEND.values
+    Z_1 = df.GRADE.values
 
     '''alpswater.xlsx'''
-    Y_1 = df.BPt.values
-    X_1 = df.Pressure.values
+    # Y_1 = df.BPt.values
+    # X_1 = df.Pressure.values
 
     '''USCensus.xls'''
     # Y_1 = df.Census.values
@@ -27,7 +28,7 @@ def main():
     # X_2 = [x**2 for x in df.Year.values]
 
 
-    pca.fit([Y_1, X_1],n_components=1)
+    data_pca = pca.fit([X_1, Y_1, Z_1],n_components=2)
 
     pca.plot()
 
