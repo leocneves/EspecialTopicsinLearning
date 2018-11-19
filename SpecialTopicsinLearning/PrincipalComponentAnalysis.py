@@ -4,7 +4,7 @@ import SpecialTopicsinLearning.Matrix as mt
 
 class PrincipalComponentAnalysis():
     def __init__(self):
-        super(PrincipalComponentAnalysis, self).__init__()
+        self.m=[]
 
     def help(self):
         print('\n')
@@ -40,7 +40,7 @@ class PrincipalComponentAnalysis():
         #getting the data fitted to principal component
         original_data = np.add(feature_vector.dot(final_data), np.array([self.vect_med]).T)
 
-        plt.scatter(original_data[0],original_data[1],color='red')
+        # plt.scatter(original_data[0],original_data[1],color='red')
 
         return original_data
 
