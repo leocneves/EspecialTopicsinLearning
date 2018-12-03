@@ -14,7 +14,7 @@ class NaiveBayes():
         print('*'*50)
         print('\n')
 
-    def fit(self, data, targets_name='target'):
+    def predict(self, data, value, targets_name='target'):
 
         self.mean_classes = []
         self.variance_classes = []
@@ -23,23 +23,21 @@ class NaiveBayes():
 
         for x in range(self.classes):
             self.mean_classes.append(np.mean(data[data[targets_name] == x].iloc[:,0:dim].values))
-            self.variance_classes.append(np.var(data[data[targets_name] == x].iloc[:,0:dim].values))
+            self.variance_classes.append(np.std(data[data[targets_name] == x].iloc[:,0:dim].values))
 
-    def predict(self, value):
         probabilities = []
         self.probabilities = []
         for x in range(self.classes):
-            # exponent = math.exp(-(math.pow(value-self.mean_classes[x],2)/(2*self.variance_classes[x])))
-            exponent = (-(np.power(value-self.mean_classes[x],2)/(2*self.variance_classes[x])))
-            # probabilities.append((1 / (math.sqrt(2*math.pi* self.variance_classes[x]))) * exponent)
-            probabilities.append((np.power((1 / (np.sqrt(2*math.pi* self.variance_classes[x]))),exponent)[0]))
+            exponent = (-(np.power(value-self.mean_classes[x],2)/(2*self.variance_classes[x]*self.variance_classes[x])))
+            probabilities.append((np.power((1 / (np.sqrt(2*math.pi)*self.variance_classes[x])),exponent)[0]))
 
-        print(probabilities)
+        c_aux = []
         for x in probabilities:
             prob = x/sum(probabilities)
-            p = 1
-            for x in prob:
-                p = p * x
-            self.probabilities.append(p)
-        print(self.probabilities)
-        return self.probabilities.index(max(self.probabilities)), max(self.probabilities)
+            self.probabilities.append(prob)
+            a = 1
+            for i in prob:
+                a *= i
+            c_aux.append(a)
+
+        return c_aux.index(min(c_aux)), self.probabilities[c_aux.index(min(c_aux))]
